@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, User, Trash2, Play } from 'lucide-react';
+import { Users, User, Trash2, UserPlus } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
   }
 
   async function handleDeleteDoctor(doctor_id: number, doctorName: string) {
-    if (!window.confirm(`Are you sure you want to remove ${doctorName}? This action cannot be undone.`)) {
+    if (!window.confirm(`Are you sure you want to remove ${doctorName}? All the related appointments and prescriptions will be deleted.`)) {
       return;
     }
 
@@ -104,8 +104,8 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
-            <Play className="h-4 w-4 text-green-600" />
+            <CardTitle className="text-sm font-medium">Add Doctor</CardTitle>
+            <UserPlus className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <Link href="/admin/add-doctor">

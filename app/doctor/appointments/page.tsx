@@ -9,6 +9,7 @@ import { Calendar, Clock, User } from 'lucide-react';
 
 export default function DoctorAppointmentsPage() {
   const [appointments, setAppointments] = useState<any[]>([]);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'completed'>('upcoming');
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
@@ -84,6 +85,34 @@ export default function DoctorAppointmentsPage() {
     hours = hours % 12 || 12; // Convert 0 → 12
 
     return `${hours.toString().padStart(2, '0')}:${minutes} ${period}`;
+  }
+
+  async function handleCancelAppointment(appointment_id: number) {
+    if (!window.confirm(`Are you sure you want to cancel this appointment? This action cannot be undone.`)) {
+      return;
+    }
+
+    setDeletingId(appointment_id);
+    try {
+      const response = await fetch('/api/appointments', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ appointment_id }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setAppointments((prev) => prev.filter((apt) => apt.appointment_id !== appointment_id));
+      } else {
+        alert(`Failed to cancel appointment: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+      alert('An error occurred while cancelling the appointment');
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   return (
@@ -171,8 +200,8 @@ export default function DoctorAppointmentsPage() {
                       <span
                         className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
                           isUpcoming
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
+                            ? 'bg-green-200 text-green-800'
+                            : 'bg-gray-200 text-gray-800'
                         }`}
                       >
                         {isUpcoming ? 'Upcoming' : 'Completed'}
@@ -180,6 +209,7 @@ export default function DoctorAppointmentsPage() {
                       {isPast && (
                         <Button
                           size="sm"
+                          className="w-40"
                           variant="outline"
                           onClick={() => {
                             setSelectedAppointment(apt);
@@ -187,6 +217,17 @@ export default function DoctorAppointmentsPage() {
                           }}
                         >
                           Add Prescription
+                        </Button>
+                      )}
+                      {isUpcoming && (
+                        <Button
+                          size="sm"
+                          className="w-40"
+                          variant="destructive"
+                          disabled={deletingId === apt.appointment_id}
+                          onClick={() => handleCancelAppointment(apt.appointment_id)}
+                        >
+                          {deletingId === apt.appointment_id ? 'Cancelling...' : 'Cancel Appointment'}
                         </Button>
                       )}
                     </div>

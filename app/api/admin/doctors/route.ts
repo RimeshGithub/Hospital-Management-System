@@ -76,12 +76,6 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<APIResp
 
     // Delete doctor record
     await query(
-      `DELETE FROM doctors WHERE doctor_id = ?`,
-      [doctor_id]
-    );
-
-    // Delete user record
-    await query(
       `DELETE FROM users WHERE id = ?`,
       [user_id]
     );

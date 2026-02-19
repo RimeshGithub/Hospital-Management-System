@@ -1,7 +1,3 @@
--- Create database
-CREATE DATABASE IF NOT EXISTS hospital_management;
-USE hospital_management;
-
 -- Users table (authentication table)
 CREATE TABLE IF NOT EXISTS users (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -9,9 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   role ENUM('patient', 'doctor', 'admin') NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_email (email),
-  INDEX idx_role (role)
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Patients table
@@ -49,10 +43,7 @@ CREATE TABLE IF NOT EXISTS appointments (
   appointment_time TIME NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE,
-  FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id) ON DELETE CASCADE,
-  INDEX idx_patient (patient_id),
-  INDEX idx_doctor (doctor_id),
-  INDEX idx_date (appointment_date)
+  FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id) ON DELETE CASCADE
 );
 
 -- Prescriptions table
@@ -66,9 +57,7 @@ CREATE TABLE IF NOT EXISTS prescriptions (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id) ON DELETE CASCADE,
   FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id) ON DELETE CASCADE,
-  FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE,
-  INDEX idx_appointment (appointment_id),
-  INDEX idx_patient (patient_id)
+  FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE
 );
 
 -- Insert pre-registered admin user with email as 'admin@hospital.com' and password as '123456'

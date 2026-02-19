@@ -134,3 +134,45 @@ export async function GET(request: NextRequest): Promise<NextResponse<APIRespons
     );
   }
 }
+
+export async function DELETE(request: NextRequest): Promise<NextResponse<APIResponse<any>>> {
+  try {
+    // Check if user is admin
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 403 }
+      );
+    }
+
+    const { appointment_id } = await request.json();
+
+    if (!appointment_id) {
+      return NextResponse.json(
+        { success: false, error: 'Appointment ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Delete appointment record
+    await query(
+      `DELETE FROM appointments WHERE appointment_id = ?`,
+      [appointment_id]
+    );
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Appointment cancelled successfully',
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('appointment cancel error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to cancel appointment' },
+      { status: 500 }
+    );
+  }
+}
