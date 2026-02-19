@@ -43,7 +43,7 @@ export default function PrescriptionsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-4xl font-bold">Prescriptions</h1>
-        <p className="text-gray-600 mt-2">View all prescriptions you have issued</p>
+        <p className="text-gray-600 mt-2">View all prescriptions doctors have issued to you</p>
       </div>
 
       <div className="space-y-4">
@@ -66,19 +66,19 @@ export default function PrescriptionsPage() {
                       <User className="h-6 w-6 text-blue-600" />
                     </div>
                     <div>
-                      <CardTitle className="flex items-center gap-2">
+                      <CardTitle className="flex items-center gap-4">
                         {prescription.name}
                         <span className="text-sm font-normal text-gray-600">
-                          ({prescription.email})
+                          Specialization: {prescription.specialization}
                         </span>
                       </CardTitle>
                       <CardDescription className="flex items-center gap-2 mt-1">
                         <Calendar className="h-4 w-4" />
                         {new Date(prescription.appointment_date).toLocaleDateString('en-US', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
                         })} at{' '}
                         {convertTo12Hour(prescription.appointment_time)}
                       </CardDescription>

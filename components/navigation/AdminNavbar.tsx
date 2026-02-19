@@ -20,11 +20,11 @@ export function AdminNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/admin/dashboard" className="font-bold text-xl text-blue-600">
-            Hospital Admin
+            Hospital Management System
           </Link>
 
           {/* Desktop menu */}
-          <div className="hidden md:flex gap-4 items-center">
+          <div className="hidden md:flex gap-6 items-center">
             <Link href="/admin/dashboard" className="text-gray-600 hover:text-gray-900">
               Dashboard
             </Link>

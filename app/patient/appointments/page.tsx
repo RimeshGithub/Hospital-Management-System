@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, User, DollarSign } from 'lucide-react';
+import { Calendar, Clock, User, Coins } from 'lucide-react';
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<any[]>([]);
@@ -30,7 +30,13 @@ export default function AppointmentsPage() {
   }
 
   const filteredAppointments = appointments.filter((apt) => {
-    const aptDate = new Date(`${apt.appointment_date}T${apt.appointment_time}`);
+    const aptDate = new Date(apt.appointment_date);
+    aptDate.setHours(
+      parseInt(apt.appointment_time.split(':')[0]),
+      parseInt(apt.appointment_time.split(':')[1]),
+      0
+    );
+
     const now = new Date();
 
     if (filter === 'upcoming') {
@@ -40,6 +46,37 @@ export default function AppointmentsPage() {
     }
     return true;
   });
+
+  if (filter === 'upcoming') {
+    filteredAppointments.sort(function (a, b) {
+      const aDate = new Date(a.appointment_date);
+      aDate.setHours(
+        parseInt(a.appointment_time.split(':')[0]),
+        parseInt(a.appointment_time.split(':')[1]),
+        0
+      )
+      const bDate = new Date(b.appointment_date);
+      bDate.setHours(
+        parseInt(b.appointment_time.split(':')[0]),
+        parseInt(b.appointment_time.split(':')[1]),
+        0
+      )
+      return aDate.getTime() - bDate.getTime();
+    })
+  }
+
+  function convertTo12Hour(time24: string): string {
+    if (!time24) return '';
+
+    const [hourStr, minuteStr] = time24.split(':');
+    let hours = parseInt(hourStr, 10);
+    const minutes = minuteStr;
+
+    const period = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; // Convert 0 → 12
+
+    return `${hours.toString().padStart(2, '0')}:${minutes} ${period}`;
+  }
 
   return (
     <div className="space-y-8">
@@ -96,12 +133,17 @@ export default function AppointmentsPage() {
           </Card>
         ) : (
           filteredAppointments.map((apt) => {
-            const aptDate = new Date(`${apt.appointment_date}T${apt.appointment_time}`);
+            const aptDate = new Date(apt.appointment_date);
+            aptDate.setHours(
+              parseInt(apt.appointment_time.split(':')[0]),
+              parseInt(apt.appointment_time.split(':')[1]),
+              0
+            );
             const isUpcoming = aptDate > new Date();
 
             return (
               <Card key={apt.appointment_id}>
-                <CardContent className="pt-6">
+                <CardContent className="pt-0">
                   <div className="flex items-start justify-between">
                     <div className="space-y-3 flex-1">
                       <div>
@@ -124,10 +166,10 @@ export default function AppointmentsPage() {
                         </div>
                         <div className="flex items-center gap-2 text-gray-600">
                           <Clock className="h-4 w-4" />
-                          {apt.appointment_time}
+                          {convertTo12Hour(apt.appointment_time)}
                         </div>
                         <div className="flex items-center gap-2 text-gray-600">
-                          <DollarSign className="h-4 w-4" />
+                          <Coins className="h-4 w-4" />
                           Rs. {apt.doctor_fees}
                         </div>
                       </div>

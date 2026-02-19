@@ -20,11 +20,11 @@ export function DoctorNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/doctor/dashboard" className="font-bold text-xl text-blue-600">
-            Doctor Portal
+            Hospital Management System
           </Link>
 
           {/* Desktop menu */}
-          <div className="hidden md:flex gap-4 items-center">
+          <div className="hidden md:flex gap-6 items-center">
             <Link href="/doctor/dashboard" className="text-gray-600 hover:text-gray-900">
               Dashboard
             </Link>

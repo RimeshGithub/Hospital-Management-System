@@ -20,11 +20,11 @@ export function PatientNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/patient/dashboard" className="font-bold text-xl text-blue-600">
-            Hospital Portal
+            Hospital Management System
           </Link>
 
           {/* Desktop menu */}
-          <div className="hidden md:flex gap-4 items-center">
+          <div className="hidden md:flex gap-6 items-center">
             <Link href="/patient/dashboard" className="text-gray-600 hover:text-gray-900">
               Dashboard
             </Link>
@@ -33,6 +33,9 @@ export function PatientNavbar() {
             </Link>
             <Link href="/patient/appointments" className="text-gray-600 hover:text-gray-900">
               My Appointments
+            </Link>
+            <Link href="/patient/prescriptions" className="text-gray-600 hover:text-gray-900">
+              Prescriptions
             </Link>
             <Button variant="outline" size="sm" onClick={handleLogout} className="flex gap-2">
               <LogOut className="h-4 w-4" />

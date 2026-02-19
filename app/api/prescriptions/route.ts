@@ -101,7 +101,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<APIRespons
       prescriptions = await query(
         `SELECT p.prescription_id, p.appointment_id, p.diagnosis_info, p.advice_medicine,
                 p.created_at, a.appointment_date, a.appointment_time,
-                d.doctor_id, du.name, du.email, du.specialization
+                d.doctor_id, du.name, du.email, d.specialization
          FROM prescriptions p
          JOIN appointments a ON p.appointment_id = a.appointment_id
          JOIN doctors d ON p.doctor_id = d.doctor_id

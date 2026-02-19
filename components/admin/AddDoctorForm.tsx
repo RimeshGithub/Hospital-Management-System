@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertCircle, CheckCircle } from 'lucide-react';
+import { DOCTOR_SPECIALIZATIONS } from '@/lib/constants';
 
 export function AddDoctorForm({ onSuccess }: { onSuccess?: () => void }) {
   const [formData, setFormData] = useState({
@@ -133,14 +135,18 @@ export function AddDoctorForm({ onSuccess }: { onSuccess?: () => void }) {
               <label htmlFor="specialization" className="text-sm font-medium">
                 Specialization *
               </label>
-              <Input
-                id="specialization"
-                type="text"
-                placeholder="e.g., Cardiology, Pediatrics"
-                value={formData.specialization}
-                onChange={(e) => handleChange('specialization', e.target.value)}
-                required
-              />
+              <Select value={formData.specialization} onValueChange={(value) => handleChange('specialization', value)}>
+                <SelectTrigger id="specialization" className="w-full">
+                  <SelectValue placeholder="Select a specialization" />
+                </SelectTrigger>
+                <SelectContent>
+                  {DOCTOR_SPECIALIZATIONS.map((spec) => (
+                    <SelectItem key={spec} value={spec}>
+                      {spec}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

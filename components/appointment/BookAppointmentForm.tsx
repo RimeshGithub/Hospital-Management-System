@@ -92,10 +92,6 @@ export function BookAppointmentForm({ onSuccess }: { onSuccess?: () => void }) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Book an Appointment</CardTitle>
-        <CardDescription>Schedule your consultation with a doctor</CardDescription>
-      </CardHeader>
       <CardContent>
         <form onSubmit={handleBookAppointment} className="space-y-4">
           {error && (

@@ -103,12 +103,6 @@ export function LoginForm() {
               Register as a patient
             </Link>
           </div>
-
-          <div className="border-t pt-4">
-            <p className="mb-2 text-xs text-gray-600">Demo credentials:</p>
-            <p className="text-xs">Email: admin@hospital.com</p>
-            <p className="text-xs">Password: admin123</p>
-          </div>
         </form>
       </CardContent>
     </Card>

@@ -71,10 +71,10 @@ CREATE TABLE IF NOT EXISTS prescriptions (
   INDEX idx_patient (patient_id)
 );
 
--- Insert pre-registered admin user
+-- Insert pre-registered admin user with email as 'admin@hospital.com' and password as '123456'
 INSERT INTO users (name, email, password, role) 
 VALUES ('Admin User', 'admin@hospital.com', 
-'$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/tvm6', 
+'$2a$10$LdPz8AcWk1nyC6GQbhC6oOo.kpAq7DDKc1V63YRhCaSWLBbU4LASu', 
 'admin');
 
 -- Insert admin record using SELECT

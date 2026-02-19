@@ -74,9 +74,9 @@ export function CreatePrescriptionForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Prescription</CardTitle>
+        <CardTitle>Patient: {patientName}</CardTitle>
         <CardDescription>
-          Patient: {patientName} ({patientEmail})
+          {patientEmail}
         </CardDescription>
       </CardHeader>
       <CardContent>

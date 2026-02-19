@@ -4,14 +4,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, FileText, Users } from 'lucide-react';
+import { Calendar, Stethoscope, FileText, User } from 'lucide-react';
 
 export default function DoctorDashboard() {
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [prescriptions, setPrescriptions] = useState<any[]>([]);
+  const [doctors, setDoctors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    fetchCurrentUser();
+    fetchDoctors();
     Promise.all([fetchAppointments(), fetchPrescriptions()]);
   }, []);
 
@@ -41,26 +45,111 @@ export default function DoctorDashboard() {
     }
   }
 
+  async function fetchCurrentUser() {
+    try {
+      const response = await fetch('/api/users/me');
+      const data = await response.json();
+      if (data.success) {
+        setCurrentUser(data.data || null);
+      }
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+      return null;
+    }
+  }
+
+  async function fetchDoctors() {
+    try {
+      const response = await fetch('/api/doctors');
+      const data = await response.json();
+      
+      if (data.success) {
+        setDoctors(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const upcomingAppointments = appointments.filter(
-    (apt) => new Date(`${apt.appointment_date}T${apt.appointment_time}`) > new Date()
-  );
+    function (apt) {
+      const aptDate = new Date(apt.appointment_date);
+      aptDate.setHours(
+        parseInt(apt.appointment_time.split(':')[0]),
+        parseInt(apt.appointment_time.split(':')[1]),
+        0
+      );
+      const now = new Date();
+      return aptDate > now;
+    }
+  ).sort(function (a, b) {
+    const aDate = new Date(a.appointment_date);
+    aDate.setHours(
+      parseInt(a.appointment_time.split(':')[0]),
+      parseInt(a.appointment_time.split(':')[1]),
+      0
+    )
+    const bDate = new Date(b.appointment_date);
+    bDate.setHours(
+      parseInt(b.appointment_time.split(':')[0]),
+      parseInt(b.appointment_time.split(':')[1]),
+      0
+    )
+    return aDate.getTime() - bDate.getTime();
+  });
 
   const completedAppointments = appointments.filter(
-    (apt) => new Date(`${apt.appointment_date}T${apt.appointment_time}`) <= new Date()
+    function (apt) {
+      const aptDate = new Date(apt.appointment_date);
+      aptDate.setHours(
+        parseInt(apt.appointment_time.split(':')[0]),
+        parseInt(apt.appointment_time.split(':')[1]),
+        0
+      );
+      const now = new Date();
+      return aptDate <= now;
+    }
   );
+
+  function convertTo12Hour(time24: string): string {
+    if (!time24) return '';
+
+    const [hourStr, minuteStr] = time24.split(':');
+    let hours = parseInt(hourStr, 10);
+    const minutes = minuteStr;
+
+    const period = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; // Convert 0 → 12
+
+    return `${hours.toString().padStart(2, '0')}:${minutes} ${period}`;
+  }
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-4xl font-bold">Doctor Dashboard</h1>
-        <p className="text-gray-600 mt-2">Manage your appointments and prescriptions</p>
+        <p className="text-gray-600 mt-2">View and Manage your appointments and prescriptions</p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Personal Info</CardTitle>
+            <User className="h-4 w-4 text-purple-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{currentUser?.name ?? 'Doctor'}</div>
+            <p className="text-xs text-gray-600">{currentUser?.email}</p>
+            <p className="text-sm text-gray-600 mt-2">Specialization: {doctors.filter((doc) => doc.user_id === currentUser?.id)[0]?.specialization}</p>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Appointments</CardTitle>
-            <Calendar className="h-4 w-4 text-blue-600" />
+            <Stethoscope className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{appointments.length}</div>
@@ -71,7 +160,7 @@ export default function DoctorDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
-            <Users className="h-4 w-4 text-green-600" />
+            <Calendar className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{upcomingAppointments.length}</div>
@@ -93,8 +182,15 @@ export default function DoctorDashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Upcoming Appointments</CardTitle>
-          <CardDescription>Your scheduled consultations</CardDescription>
+          <div className="flex justify-between">
+            <div>
+              <CardTitle>Upcoming Appointments</CardTitle>
+              <CardDescription>Your scheduled consultations</CardDescription>
+            </div>
+            <Link href="/doctor/appointments">
+              <Button size="sm">View All</Button>
+            </Link>
+          </div>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -114,13 +210,15 @@ export default function DoctorDashboard() {
                     <p className="font-medium">{apt.name}</p>
                     <p className="text-sm text-gray-600">{apt.email}</p>
                     <p className="text-sm text-gray-600">
-                      {new Date(apt.appointment_date).toLocaleDateString()} at{' '}
-                      {apt.appointment_time}
+                      {new Date(apt.appointment_date).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })} at{' '}
+                      {convertTo12Hour(apt.appointment_time)}
                     </p>
                   </div>
-                  <Link href="/doctor/appointments">
-                    <Button size="sm">View All</Button>
-                  </Link>
                 </div>
               ))}
             </div>
