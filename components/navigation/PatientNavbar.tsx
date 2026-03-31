@@ -34,9 +34,6 @@ export function PatientNavbar() {
             <Link href="/patient/appointments" className="text-gray-600 hover:text-gray-900">
               My Appointments
             </Link>
-            <Link href="/patient/prescriptions" className="text-gray-600 hover:text-gray-900">
-              Prescriptions
-            </Link>
             <Button variant="outline" size="sm" onClick={handleLogout} className="flex gap-2">
               <LogOut className="h-4 w-4" />
               Logout

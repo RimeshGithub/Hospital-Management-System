@@ -9,14 +9,13 @@ import { Calendar, Stethoscope, FileText, User } from 'lucide-react';
 export default function DoctorDashboard() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
-  const [prescriptions, setPrescriptions] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchCurrentUser();
     fetchDoctors();
-    Promise.all([fetchAppointments(), fetchPrescriptions()]);
+    Promise.all([fetchAppointments()]);
   }, []);
 
   async function fetchAppointments() {
@@ -30,18 +29,6 @@ export default function DoctorDashboard() {
       console.error('Error fetching appointments:', error);
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function fetchPrescriptions() {
-    try {
-      const response = await fetch('/api/prescriptions');
-      const data = await response.json();
-      if (data.success) {
-        setPrescriptions(data.data || []);
-      }
-    } catch (error) {
-      console.error('Error fetching prescriptions:', error);
     }
   }
 
@@ -130,10 +117,10 @@ export default function DoctorDashboard() {
     <div className="space-y-8">
       <div>
         <h1 className="text-4xl font-bold">Doctor Dashboard</h1>
-        <p className="text-gray-600 mt-2">View and Manage your appointments and prescriptions</p>
+        <p className="text-gray-600 mt-2">View and Manage your appointments</p>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Personal Info</CardTitle>
@@ -165,17 +152,6 @@ export default function DoctorDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{upcomingAppointments.length}</div>
             <p className="text-xs text-gray-600">Scheduled appointments</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Prescriptions</CardTitle>
-            <FileText className="h-4 w-4 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{prescriptions.length}</div>
-            <p className="text-xs text-gray-600">Issued prescriptions</p>
           </CardContent>
         </Card>
       </div>

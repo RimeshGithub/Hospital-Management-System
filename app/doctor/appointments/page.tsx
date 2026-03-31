@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CreatePrescriptionForm } from '@/components/appointment/CreatePrescriptionForm';
 import { Calendar, Clock, User } from 'lucide-react';
 
 export default function DoctorAppointmentsPage() {
@@ -13,7 +12,6 @@ export default function DoctorAppointmentsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'completed'>('upcoming');
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
-  const [showPrescriptionDialog, setShowPrescriptionDialog] = useState(false);
 
   useEffect(() => {
     fetchAppointments();
@@ -68,12 +66,6 @@ export default function DoctorAppointmentsPage() {
     })
   }
 
-  function handlePrescriptionSuccess() {
-    setShowPrescriptionDialog(false);
-    setSelectedAppointment(null);
-    fetchAppointments();
-  }
-
   function convertTo12Hour(time24: string): string {
     if (!time24) return '';
 
@@ -119,7 +111,7 @@ export default function DoctorAppointmentsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-4xl font-bold">Appointments</h1>
-        <p className="text-gray-600 mt-2">View and Manage your patient appointments and Add prescriptions</p>
+        <p className="text-gray-600 mt-2">View and Manage your patient appointments</p>
       </div>
 
       <div className="flex gap-2">
@@ -206,19 +198,6 @@ export default function DoctorAppointmentsPage() {
                       >
                         {isUpcoming ? 'Upcoming' : 'Completed'}
                       </span>
-                      {isPast && (
-                        <Button
-                          size="sm"
-                          className="w-40"
-                          variant="outline"
-                          onClick={() => {
-                            setSelectedAppointment(apt);
-                            setShowPrescriptionDialog(true);
-                          }}
-                        >
-                          Add Prescription
-                        </Button>
-                      )}
                       {isUpcoming && (
                         <Button
                           size="sm"
@@ -238,22 +217,6 @@ export default function DoctorAppointmentsPage() {
           })
         )}
       </div>
-
-      {selectedAppointment && (
-        <Dialog open={showPrescriptionDialog} onOpenChange={setShowPrescriptionDialog}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Add Prescription</DialogTitle>
-            </DialogHeader>
-            <CreatePrescriptionForm
-              appointmentId={selectedAppointment.appointment_id}
-              patientName={selectedAppointment.name}
-              patientEmail={selectedAppointment.email}
-              onSuccess={handlePrescriptionSuccess}
-            />
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 }

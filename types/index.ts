@@ -39,18 +39,6 @@ export interface Appointment {
   doctor?: Doctor;
 }
 
-export interface Prescription {
-  prescription_id: number;
-  appointment_id: number;
-  doctor_id: number;
-  patient_id: number;
-  diagnosis_info: string;
-  advice_medicine: string;
-  appointment?: Appointment;
-  doctor?: Doctor;
-  patient?: Patient;
-}
-
 export interface APIResponse<T> {
   success: boolean;
   data?: T;

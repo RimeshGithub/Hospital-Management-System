@@ -29,7 +29,7 @@ For XAMPP:
 - Open XAMPP
 - Start Apache and MySQL
 - Goto http://localhost/phpmyadmin/ in browser
-- Create new Database: `hms`
+- Create new Database: `hospital-management-system`
 - Inside that Database click `Import` button
 - Choose the file to import: select the file named `setup-db.sql` under `scripts` folder
 - Click `Import` button
@@ -40,7 +40,7 @@ Create a file named `.env.local` and include the following:
 DATABASE_HOST=localhost
 DATABASE_USER=root
 DATABASE_PASSWORD=
-DATABASE_NAME=hms
+DATABASE_NAME=hospital-management-system
 JWT_SECRET=supersecretkey123
 NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
@@ -74,6 +74,3 @@ Stores admin records linked to users
 
 ### Appointments Table
 Links patients with doctors for appointments
-
-### Prescriptions Table
-Stores prescription details linked to appointments and patients

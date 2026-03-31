@@ -45,7 +45,7 @@ export default function AdminDashboard() {
   }
 
   async function handleDeleteDoctor(doctor_id: number, doctorName: string) {
-    if (!window.confirm(`Are you sure you want to remove ${doctorName}? All the related appointments and prescriptions will be deleted.`)) {
+    if (!window.confirm(`Are you sure you want to remove ${doctorName}? All the related appointments will be deleted.`)) {
       return;
     }
 

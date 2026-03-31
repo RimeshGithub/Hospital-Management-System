@@ -46,20 +46,6 @@ CREATE TABLE IF NOT EXISTS appointments (
   FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id) ON DELETE CASCADE
 );
 
--- Prescriptions table
-CREATE TABLE IF NOT EXISTS prescriptions (
-  prescription_id INT PRIMARY KEY AUTO_INCREMENT,
-  appointment_id INT NOT NULL,
-  doctor_id INT NOT NULL,
-  patient_id INT NOT NULL,
-  diagnosis_info TEXT,
-  advice_medicine TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id) ON DELETE CASCADE,
-  FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id) ON DELETE CASCADE,
-  FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE
-);
-
 -- Insert pre-registered admin user with email as 'admin@hospital.com' and password as '123456'
 INSERT INTO users (name, email, password, role) 
 VALUES ('Admin User', 'admin@hospital.com', 

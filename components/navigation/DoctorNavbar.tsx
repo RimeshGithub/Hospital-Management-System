@@ -31,9 +31,6 @@ export function DoctorNavbar() {
             <Link href="/doctor/appointments" className="text-gray-600 hover:text-gray-900">
               Appointments
             </Link>
-            <Link href="/doctor/prescriptions" className="text-gray-600 hover:text-gray-900">
-              Prescriptions
-            </Link>
             <Button variant="outline" size="sm" onClick={handleLogout} className="flex gap-2">
               <LogOut className="h-4 w-4" />
               Logout
@@ -63,12 +60,6 @@ export function DoctorNavbar() {
               className="block px-4 py-2 text-gray-600 hover:text-gray-900"
             >
               Appointments
-            </Link>
-            <Link
-              href="/doctor/prescriptions"
-              className="block px-4 py-2 text-gray-600 hover:text-gray-900"
-            >
-              Prescriptions
             </Link>
             <Button
               variant="outline"
